@@ -84,6 +84,25 @@
                 </div>
               @endif
             </div>
+
+
+             <div class="form-group row mb-0">
+              <div class="col-md-6 offset-md-4">
+                    <button  id="toggle"  class="btn btn-primary">
+                        {{ __('i want to add my organization') }}
+                    </button>
+                </div>
+            </div>
+            <div id="owner" class="bmd-form-group mt-3">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="material-icons">email</i>
+                  </span>
+                </div>
+                <input type="organization" name="organization" class="form-control" placeholder="{{ __('Organization...') }}" value="{{ old('organization') }}" >
+              </div>
+            </div>
             <div class="form-check mr-auto ml-3 mt-3">
               <label class="form-check-label">
                 <input class="form-check-input" type="checkbox" id="policy" name="policy" {{ old('policy', 1) ? 'checked' : '' }} >
@@ -94,6 +113,8 @@
               </label>
             </div>
           </div>
+          
+
           <div class="card-footer justify-content-center">
             <button type="submit" class="btn btn-primary btn-link btn-lg">{{ __('Create account') }}</button>
           </div>
@@ -102,4 +123,13 @@
     </div>
   </div>
 </div>
+
+<script>
+
+$(document).ready(function(){
+  $("#toggle").click(function(){
+   $("#owner").toggle();
+  });
+});
+</script>
 @endsection

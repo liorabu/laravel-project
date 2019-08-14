@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Organization;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use\Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
 {
@@ -63,10 +65,29 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        if(!is_null($data['organization'])){ 
+                            $var3= User::create([
+                               'name' => $data['name'],
+                               'email' => $data['email'],
+                            'password' => Hash::make($data['password']),
+                              'role'=>'owner',
+                               ]);
+                $var1=Organization::create([
+                         'owner_id'=>$var3['id'],
+                           'org_name'=> $data['organization'],
+                          'owner_name' =>$data['name'],
+                           
+                  ]);
+                   return $var3;
+                     }
+                     $var2= User::create([
+                         'name' => $data['name'],
+                         'email' => $data['email'],
+                         'password' => Hash::make($data['password']),
+        
+                       
+                        ]);
+                    
+                    return $var2;
     }
 }
