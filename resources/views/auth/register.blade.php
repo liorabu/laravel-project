@@ -87,12 +87,13 @@
 
 
              <div class="form-group row mb-0">
-              <div class="col-md-6 offset-md-4">
+              <div class="col-md-6 offset-md-0.5">
                     <button  id="toggle"  class="btn btn-primary">
                         {{ __('i want to add my organization') }}
                     </button>
                 </div>
             </div>
+            
             <div id="owner" class="bmd-form-group mt-3">
               <div class="input-group">
                 <div class="input-group-prepend">
@@ -102,6 +103,13 @@
                 </div>
                 <input type="organization" name="organization" class="form-control" placeholder="{{ __('Organization...') }}" value="{{ old('organization') }}" >
               </div>
+            </div>
+            <div class="form-group row mb-0">
+              <div class="col-md-6 offset-md-0.5">
+                    <button  id="toggle1"  class="btn btn-primary">
+                        {{ __('i am not a owner') }}
+                    </button>
+                </div>
             </div>
             <div class="form-check mr-auto ml-3 mt-3">
               <label class="form-check-label">
@@ -127,8 +135,16 @@
 <script>
 
 $(document).ready(function(){
+  $("#toggle1").hide();
   $("#toggle").click(function(){
-   $("#owner").toggle();
+   $("#owner").show();
+   $("#toggle").hide();
+   $("#toggle1").show();
+  });
+  $("#toggle1").click(function(){
+    $("#toggle1").hide();
+   $("#owner").hide();
+   $("#toggle").show();
   });
 });
 </script>
