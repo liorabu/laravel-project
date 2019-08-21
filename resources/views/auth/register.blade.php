@@ -1,4 +1,4 @@
-@extends('layouts.app', ['class' => 'off-canvas-sidebar', 'activePage' => 'register', 'title' => __('Material Dashboard')])
+@extends('layouts.app', ['class' => 'off-canvas-sidebar', 'activePage' => 'register', 'title' => __('')])
 
 @section('content')
 <div class="container" style="height: auto;">
@@ -11,19 +11,10 @@
           <div class="card-header card-header-primary text-center">
             <h4 class="card-title"><strong>{{ __('Register') }}</strong></h4>
             <div class="social-line">
-              <a href="#pablo" class="btn btn-just-icon btn-link btn-white">
-                <i class="fa fa-facebook-square"></i>
-              </a>
-              <a href="#pablo" class="btn btn-just-icon btn-link btn-white">
-                <i class="fa fa-twitter"></i>
-              </a>
-              <a href="#pablo" class="btn btn-just-icon btn-link btn-white">
-                <i class="fa fa-google-plus"></i>
-              </a>
             </div>
           </div>
           <div class="card-body ">
-            <p class="card-description text-center">{{ __('Or Be Classical') }}</p>
+            <p class="card-description text-center">{{ __('Create a New Account') }}</p>
             <div class="bmd-form-group{{ $errors->has('name') ? ' has-danger' : '' }}">
               <div class="input-group">
                 <div class="input-group-prepend">
@@ -84,8 +75,6 @@
                 </div>
               @endif
             </div>
-
-
              <div class="form-group row mb-0">
               <div class="col-md-6 offset-md-0.5">
                     <button  id="toggle"  class="btn btn-primary">
@@ -93,12 +82,11 @@
                     </button>
                 </div>
             </div>
-            
             <div id="owner" class="bmd-form-group mt-3">
               <div class="input-group">
                 <div class="input-group-prepend">
                   <span class="input-group-text">
-                    <i class="material-icons">email</i>
+                    <i class="material-icons">work</i>
                   </span>
                 </div>
                 <input type="organization" name="organization" class="form-control" placeholder="{{ __('Organization...') }}" value="{{ old('organization') }}" >
@@ -135,18 +123,18 @@
 <script>
 
 $(document).ready(function(){
-  $("#owner").hide();
-  $("#toggle1").hide();
-  $("#toggle").show();
-  $("#toggle").click(function(){
-   $("#owner").show();
-   $("#toggle").hide();
-   $("#toggle1").show();
-  });
-  $("#toggle1").click(function(){
+    $("#owner").hide();
     $("#toggle1").hide();
-   $("#owner").hide();
-   $("#toggle").show();
+    $("#toggle").show();
+    $("#toggle").click(function(){
+    $("#owner").show();
+    $("#toggle").hide();
+    $("#toggle1").show();
+  });
+    $("#toggle1").click(function(){
+    $("#toggle1").hide();
+    $("#owner").hide();
+    $("#toggle").show();
   });
 });
 </script>

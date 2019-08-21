@@ -79,47 +79,6 @@
           </div>
         </div>
       </div>
-      <div class="col-md-12">
-        <div class="places-buttons">
-          <div class="row">
-            <div class="col-md-6 ml-auto mr-auto text-center">
-              <h4 class="card-title">
-                Notifications Places
-                <p class="category">Click to view notifications</p>
-              </h4>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-8 col-md-10 ml-auto mr-auto">
-              <div class="row">
-                <div class="col-md-4">
-                  <button class="btn btn-primary btn-block" onclick="md.showNotification('top','left')">Top Left</button>
-                </div>
-                <div class="col-md-4">
-                  <button class="btn btn-primary btn-block" onclick="md.showNotification('top','center')">Top Center</button>
-                </div>
-                <div class="col-md-4">
-                  <button class="btn btn-primary btn-block" onclick="md.showNotification('top','right')">Top Right</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-8 col-md-10 ml-auto mr-auto">
-              <div class="row">
-                <div class="col-md-4">
-                  <button class="btn btn-primary btn-block" onclick="md.showNotification('bottom','left')">Bottom Left</button>
-                </div>
-                <div class="col-md-4">
-                  <button class="btn btn-primary btn-block" onclick="md.showNotification('bottom','center')">Bottom Center</button>
-                </div>
-                <div class="col-md-4">
-                  <button class="btn btn-primary btn-block" onclick="md.showNotification('bottom','right')">Bottom Right</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
