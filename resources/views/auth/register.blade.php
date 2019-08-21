@@ -135,7 +135,9 @@
 <script>
 
 $(document).ready(function(){
+  $("#owner").hide();
   $("#toggle1").hide();
+  $("#toggle").show();
   $("#toggle").click(function(){
    $("#owner").show();
    $("#toggle").hide();
