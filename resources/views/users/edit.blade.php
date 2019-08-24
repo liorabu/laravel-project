@@ -42,6 +42,23 @@
                     </div>
                   </div>
                 </div>
+                @canany(['owner', 'admin']) 
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">{{ __('Role') }}</label>
+                  <div class="col-sm-7">
+                    <div class="form-group{{ $errors->has('role') ? ' has-danger' : '' }}">
+                      <select class="form-control{{ $errors->has('role') ? ' is-invalid' : '' }}" name="role" id="input-role" type="role" name="role">
+                        <option value="admin" >admin</option>
+                        <option value="invitor">invitor</option>
+                        <option value="participator">participator</option>
+                      </select>
+                      @if ($errors->has('role'))
+                        <span id="role-error" class="error text-danger" for="input-role">{{ $errors->first('role') }}</span>
+                      @endif
+                    </div>
+                  </div>
+                </div>
+                @endcan
                 <div class="row">
                   <label class="col-sm-2 col-form-label" for="input-password">{{ __(' Password') }}</label>
                   <div class="col-sm-7">

@@ -29,15 +29,17 @@
             <li class="nav-item{{ $activePage == 'profile' ? ' active' : '' }}">
               <a class="nav-link" href="{{ route('profile.edit') }}">
               <i class="material-icons">people_outline</i>
-                <span class="sidebar-normal">{{ __('Users') }} </span>
+                <span class="sidebar-normal">{{ __('Edit Profile') }} </span>
               </a>
             </li>
+            @canany(['owner', 'admin']) 
             <li class="nav-item{{ $activePage == 'user-management' ? ' active' : '' }}">
               <a class="nav-link" href="{{ route('user.index') }}">
               <i class="material-icons">person</i>
                 <span class="sidebar-normal"> {{ __('Management') }} </span>
               </a>
             </li>
+            @endcan
           </ul>
         </div>
       </li>

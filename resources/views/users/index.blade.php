@@ -1,6 +1,7 @@
 @extends('layouts.app', ['activePage' => 'user-management', 'titlePage' => __('User Management')])
 
 @section('content')
+
   <div class="content">
     <div class="container-fluid">
       <div class="row">
@@ -38,14 +39,18 @@
                         {{ __('Email') }}
                       </th>
                       <th>
-                        {{ __('Creation date') }}
+                        {{ __('Role') }}
                       </th>
                       <th class="text-right">
                         {{ __('Actions') }}
                       </th>
                     </thead>
                     <tbody>
+                     
                       @foreach($users as $user)
+                      
+                      @if($user->org_id==Auth::user()->org_id)
+                      
                         <tr>
                           <td>
                             {{ $user->name }}
@@ -54,7 +59,8 @@
                             {{ $user->email }}
                           </td>
                           <td>
-                            {{ $user->created_at->format('Y-m-d') }}
+                            {{ $user->role }}
+                            
                           </td>
                           <td class="td-actions text-right">
                             @if ($user->id != auth()->id())
@@ -79,6 +85,7 @@
                             @endif
                           </td>
                         </tr>
+                        @endif
                       @endforeach
                     </tbody>
                   </table>

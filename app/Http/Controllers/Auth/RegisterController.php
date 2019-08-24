@@ -75,16 +75,14 @@ class RegisterController extends Controller
                 $var1=Organization::create([
                          'owner_id'=>$var3['id'],
                            'org_name'=> $data['organization'],
-                          'owner_name' =>$data['name'],
-                           
+                          'owner_name' =>$data['name'],       
                   ]);
                    return $var3;
-                     }
+        }
                      $var2= User::create([
                          'name' => $data['name'],
                          'email' => $data['email'],
                          'password' => Hash::make($data['password']),
-        
                        
                         ]);
                     

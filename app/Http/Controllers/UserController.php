@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
@@ -16,7 +18,7 @@ class UserController extends Controller
      */
     public function index(User $model)
     {
-        return view('users.index', ['users' => $model->paginate(15)]);
+        return view('users.index', ['users' => $model->paginate(15),]);
     }
 
     /**
@@ -38,6 +40,10 @@ class UserController extends Controller
      */
     public function store(UserRequest $request, User $model)
     {
+        if (Gate::denies('owner')&&Gate::denies('admin')) {
+            abort(403,"You are not allowed to be here");
+       }
+ 
         $model->create($request->merge(['password' => Hash::make($request->get('password'))])->all());
 
         return redirect()->route('user.index')->withStatus(__('User successfully created.'));
@@ -51,6 +57,10 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+       
+        if (Gate::denies('owner')&&Gate::denies('admin')) {
+            abort(403,"You are not allowed to be here");
+       }
         return view('users.edit', compact('user'));
     }
 
@@ -63,6 +73,9 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, User  $user)
     {
+        if (Gate::denies('owner')&&Gate::denies('admin')) {
+            abort(403,"You are not allowed to be here");
+       }
         $user->update(
             $request->merge(['password' => Hash::make($request->get('password'))])
                 ->except([$request->get('password') ? '' : 'password']
@@ -79,6 +92,9 @@ class UserController extends Controller
      */
     public function destroy(User  $user)
     {
+        if (Gate::denies('owner')&&Gate::denies('admin')) {
+            abort(403,"You are not allowed to be here");
+       }
         $user->delete();
 
         return redirect()->route('user.index')->withStatus(__('User successfully deleted.'));
