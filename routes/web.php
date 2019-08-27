@@ -14,6 +14,10 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Route::resource('tasks','TaskController')->middleware('auth');
+
+Route::get('tasks/status/{id}', 'TaskController@update_status')->name('update_status');
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home')->middleware('auth');

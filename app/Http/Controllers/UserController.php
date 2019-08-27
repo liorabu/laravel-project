@@ -18,6 +18,7 @@ class UserController extends Controller
      */
     public function index(User $model)
     {
+        $users=User::where('org_id',Auth::user()->org_id);
         return view('users.index', ['users' => $model->paginate(15),]);
     }
 
@@ -40,7 +41,7 @@ class UserController extends Controller
      */
     public function store(UserRequest $request, User $model)
     {
-        if (Gate::denies('owner')&&Gate::denies('admin')) {
+        if (Gate::denies('owner')) {
             abort(403,"You are not allowed to be here");
        }
  
@@ -58,7 +59,7 @@ class UserController extends Controller
     public function edit(User $user)
     {
        
-        if (Gate::denies('owner')&&Gate::denies('admin')) {
+        if (Gate::denies('owner')) {
             abort(403,"You are not allowed to be here");
        }
         return view('users.edit', compact('user'));
@@ -73,7 +74,7 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, User  $user)
     {
-        if (Gate::denies('owner')&&Gate::denies('admin')) {
+        if (Gate::denies('owner')) {
             abort(403,"You are not allowed to be here");
        }
         $user->update(
@@ -92,14 +93,17 @@ class UserController extends Controller
      */
     public function destroy(User  $user)
     {
-        if (Gate::denies('owner')&&Gate::denies('admin')) {
+        if (Gate::denies('owner')) {
             abort(403,"You are not allowed to be here");
        }
-        $user->delete();
+        $user->org_id=0;
+        $user->save();
 
-        return redirect()->route('user.index')->withStatus(__('User successfully deleted.'));
+        return redirect()->route('user.index')->withStatus(__('User successfully fired.'));
     }
    
 
     
 }
+
+

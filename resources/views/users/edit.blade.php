@@ -42,15 +42,15 @@
                     </div>
                   </div>
                 </div>
-                @canany(['owner', 'admin']) 
+                @can('owner') 
                 <div class="row">
                   <label class="col-sm-2 col-form-label">{{ __('Role') }}</label>
                   <div class="col-sm-7">
                     <div class="form-group{{ $errors->has('role') ? ' has-danger' : '' }}">
                       <select class="form-control{{ $errors->has('role') ? ' is-invalid' : '' }}" name="role" id="input-role" type="role" name="role">
-                        <option value="admin" >admin</option>
-                        <option value="invitor">invitor</option>
-                        <option value="participator">participator</option>
+                        <option value="admin" {!! $user->role == "admin" ? ' selected' : '' !!}>admin</option>
+                        <option value="invitor"{!! $user->role == "invitor" ? ' selected' : '' !!}>invitor</option>
+                        <option value="participator"{!! $user->role == "participator" ? ' selected' : '' !!}>participator</option>
                       </select>
                       @if ($errors->has('role'))
                         <span id="role-error" class="error text-danger" for="input-role">{{ $errors->first('role') }}</span>
@@ -59,26 +59,7 @@
                   </div>
                 </div>
                 @endcan
-                <div class="row">
-                  <label class="col-sm-2 col-form-label" for="input-password">{{ __(' Password') }}</label>
-                  <div class="col-sm-7">
-                    <div class="form-group{{ $errors->has('password') ? ' has-danger' : '' }}">
-                      <input class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" input type="password" name="password" id="input-password" placeholder="{{ __('Password') }}" />
-                      @if ($errors->has('password'))
-                        <span id="name-error" class="error text-danger" for="input-name">{{ $errors->first('password') }}</span>
-                      @endif
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <label class="col-sm-2 col-form-label" for="input-password-confirmation">{{ __('Confirm Password') }}</label>
-                  <div class="col-sm-7">
-                    <div class="form-group">
-                      <input class="form-control" name="password_confirmation" id="input-password-confirmation" type="password" placeholder="{{ __('Confirm Password') }}" />
-                    </div>
-                  </div>
-                </div>
-              </div>
+                
               <div class="card-footer ml-auto mr-auto">
                 <button type="submit" class="btn btn-primary">{{ __('Save') }}</button>
               </div>
@@ -89,3 +70,4 @@
     </div>
   </div>
 @endsection
+

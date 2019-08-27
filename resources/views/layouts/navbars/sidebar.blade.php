@@ -43,8 +43,8 @@
           </ul>
         </div>
       </li>
-      <li class="nav-item{{ $activePage == 'table' ? ' active' : '' }}">
-        <a class="nav-link" href="{{ route('table') }}">
+      <li class="nav-item{{ $activePage == 'tasks' ? ' active' : '' }}">
+        <a class="nav-link" href="{{ route('tasks.index') }}">
           <i class="material-icons">content_paste</i>
             <p>{{ __('Tasks') }}</p>
         </a>

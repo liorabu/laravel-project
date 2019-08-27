@@ -9,9 +9,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     use Notifiable;
-    public function user(){
+    public function organization(){
         return $this->belongsTo('App\Organization');
-
+    }
+    public function task(){
+        return $this->hasMany('App\Task');
     }
 
     /**
@@ -20,7 +22,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','role',
+        'name', 'email', 'password','role','org_id',
     ];
 
     /**
@@ -41,3 +43,5 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 }
+
+
