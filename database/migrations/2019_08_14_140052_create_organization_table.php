@@ -18,6 +18,7 @@ class CreateOrganizationTable extends Migration
             $table->string('org_name')->nullable();
             $table->integer('owner_id')->nullable();
             $table->string('owner_name')->nullable();
+            $table->integer('schedule')->default(1);
             $table->timestamps();
         });
     }

@@ -15,9 +15,11 @@ class CreateDetailsTable extends Migration
     {
         Schema::create('details', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('invitor_id');
             $table->integer('meeting_id');
             $table->string('description');
-            $table->string('start_time');
+            $table->time('start_time');
+            $table->time('finish_time');
             $table->boolean('status')->default(0)->nullable();
             $table->timestamps();
         });

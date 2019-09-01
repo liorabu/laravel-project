@@ -40,7 +40,7 @@
                 <div class="col-sm-7">
                     <div class="form-group{{ $errors->has('participator') ? ' has-danger' : '' }}">
                         <select class="form-control{{ $errors->has('participator') ? ' is-invalid' : '' }}" name="participator" id="input-participator" type="text" value="{{ old('name') }}" required="true" aria-required="true"/>
-                        @foreach((DB::table('users')->where('org_id', Auth::user()->org_id)->where('role', "participator")->get()) as $participator)
+                        @foreach($participators as $participator)
                         <option>{{$participator->name}}</option>
                         @endforeach
                         </select>

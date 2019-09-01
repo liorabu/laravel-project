@@ -4,16 +4,19 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Organization extends Model
+class Meeting extends Model
 {
     public function user(){
-        return $this->hasMany('App\user');
-
+        return $this->hasMany('App\User');
+    }
+    
+    public function organization(){
+        return $this->belongsTo('App\Organization');
     }
     public function detail(){
         return $this->hasMany('App\Detail');
     }
     protected $fillable = [
-                'org_name', 'owner_name','owner_id',
-           ];
+        'title', 'date',
+   ];
 }

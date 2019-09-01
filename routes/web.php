@@ -14,13 +14,24 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/home', 'HomeController@index')->name('home')->middleware('auth');
+
 Route::resource('tasks','TaskController')->middleware('auth');
 
 Route::get('tasks/status/{id}', 'TaskController@update_status')->name('update_status');
 
-Auth::routes();
+Route::resource('meetings','MeetingController')->middleware('auth');
 
-Route::get('/home', 'HomeController@index')->name('home')->middleware('auth');
+Route::resource('details','DetailController')->middleware('auth');
+
+Route::get('add_users', 'DetailController@add_users')->name('add_users');
+
+Route::get('meetings/show_users', 'MeetingController@show_users')->name('show_users');
+
+Route::get('meetings/connect_between/{user_id}/{meeting_id}', 'MeetingController@connect_between')->name('connect_between');
+
+
+Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
 	Route::get('table-list', function () {

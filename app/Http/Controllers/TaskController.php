@@ -4,10 +4,15 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Task;
+use App\Detail;
+use App\Meeting;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\DB;
+
 
 class TaskController extends Controller
 {
@@ -44,7 +49,11 @@ class TaskController extends Controller
      */
     public function create()
     {
-        return view('tasks.create');
+        $meeting_id=DB::table('meetings')->where('invitor_id', Auth::user()->id)->max('id');
+        $users_in=DB::table('meeting_users')->where('meeting_id',$meeting_id)->pluck('user_id');
+        $users=User::whereIn('id',$users_in)->where('role',"participator")->get();
+
+        return view('tasks.create',['users'=>$users,'meeting_id'=>$meeting_id]);
     }
 
     /**
@@ -58,16 +67,27 @@ class TaskController extends Controller
         if (Gate::denies('invitor')) {
             abort(403,"You are not allowed to add a task");
        }
+       $id=Auth::user()->id;
+       $meeting_id=DB::table('meetings')->where('invitor_id', $id)->max('id');
+       $users_in=DB::table('meeting_users')->where('meeting_id',$meeting_id)->pluck("user_id");
+       $org_id=Auth::user()->org_id;
+
         $task = new Task();
-        $id = Auth::id();
+        $id = Auth::user()->id;
         $task->description = $request->description;
-        $task->participator_id=User::where('name',$request->participator)->first()->id;
+       // $task->participator_id=User::where('name',$request->participator)->first()->id;
         $task->invitor_id=$id;
+        $task->meeting_id=$meeting_id;
         $task->due_date=$request->due_date;
         $task->status = 0;
         $task->org_id=Auth::user()->org_id;
         $task->save();
-        return redirect('tasks');
+
+        $users=User::whereIn('id',$users_in)->where('role',"participator")->get();
+
+        return view('tasks.create',['users'=>$users]);
+
+        
     }
 
     /**
@@ -91,10 +111,15 @@ class TaskController extends Controller
     {
         if (Gate::denies('invitor')) {
             abort(403,"You are not allowed to be here");
-       }
-       $task = Task::find($id);
-       $org_id=Auth::user()->org_id;
-      $participators = User::where('org_id',$org_id)->where('role', 'participator')->get();
+        }
+        $task = Task::find($id);
+        $meeting_id=$task->meeting_id;
+
+        $users_in=DB::table('meeting_users')->where('meeting_id',$meeting_id)->pluck('user_id');
+        $participators=User::whereIn('id',$users_in)->where('role',"participator")->get();
+
+        $org_id=Auth::user()->org_id;
+        
         return view('tasks.edit',['task'=>$task],['participators'=> $participators]);
     }
 
@@ -113,15 +138,12 @@ class TaskController extends Controller
             abort(403,"You are not allowed to be here");
        }
        if(!$task->invitor_id == Auth::id()) return(redirect('tasks'));
-
-      
-       $id = Auth::id();
-       $task->description = $request->description;
-       $task->participator_id=User::where('name',$request->participator)->first()->id;
-       $task->due_date=$request->due_date;
-       $task->save();
-       return redirect('tasks');
-
+            $id = Auth::id();
+            $task->description = $request->description;
+            $task->participator_id=User::where('name',$request->participator)->first()->id;
+            $task->due_date=$request->due_date;
+            $task->save();
+            return redirect('tasks');
     }
 
     /**
@@ -132,17 +154,17 @@ class TaskController extends Controller
      */
     public function destroy($id)
     {
-     //   if (Gate::denies('invitor')) {
-       //     abort(403,"You are not allowed to be here");
-       //}
+      if (Gate::denies('invitor')) {
+            abort(403,"You are not allowed to be here");
+       }
        
-       //$user_id=Auth::user()->id;
-       //$invitor_id=Task::find($id)->invitor_id;
+       $user_id=Auth::user()->id;
+       $invitor_id=Task::find($id)->invitor_id;
 
-      // if($invitor_id==$user_id){
-        $task=Task::find($id);
-        $task->delete();
-  //  }
+       if($invitor_id==$user_id){
+            $task=Task::find($id);
+            $task->delete();
+        }
         return redirect ('tasks');
     }
 

@@ -15,9 +15,12 @@ class CreateMeetingsTable extends Migration
     {
         Schema::create('meetings', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('seeting_invitor_id');
-            $table->integer('min_details');
+            $table->string('title');
+            $table->integer('invitor_id');
+            $table->date('date');
+            $table->integer('org_id');
             $table->timestamps();
+
         });
     }
 

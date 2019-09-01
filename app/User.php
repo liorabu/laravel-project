@@ -15,6 +15,9 @@ class User extends Authenticatable
     public function task(){
         return $this->hasMany('App\Task');
     }
+    public function detail(){
+        return $this->hasMany('App\Detail');
+    }
 
     /**
      * The attributes that are mass assignable.

@@ -17,19 +17,33 @@
             <p>{{ __('Calendar') }}</p>
         </a>
       </li>
+     
       <li class="nav-item {{ ($activePage == 'profile' || $activePage == 'user-management') ? ' active' : '' }}">
-        <a class="nav-link" data-toggle="collapse" href="#laravelExample" aria-expanded="true">
+      @canany(['owner', 'admin']) 
+        <a class="nav-link" data-toggle="collapse" href="#laravelExample" aria-expanded="false">
         <i class="material-icons">menu</i>
           <p>{{ __('Users') }}
             <b class="caret"></b>
           </p>
         </a>
+       
+        <div class="collapse hide" id="laravelExample">
+        @endcan
+        
+        @canany(['invitor', 'participator']) 
         <div class="collapse show" id="laravelExample">
+        @endcan
+
           <ul class="nav">
             <li class="nav-item{{ $activePage == 'profile' ? ' active' : '' }}">
               <a class="nav-link" href="{{ route('profile.edit') }}">
-              <i class="material-icons">people_outline</i>
+              <i class="material-icons">edit</i>
+              @canany(['owner', 'admin']) 
                 <span class="sidebar-normal">{{ __('Edit Profile') }} </span>
+                @endcan
+                @canany(['invitor', 'participator']) 
+                <p>{{ __('Edit Profile') }}</p>
+                @endcan
               </a>
             </li>
             @canany(['owner', 'admin']) 
@@ -47,6 +61,12 @@
         <a class="nav-link" href="{{ route('tasks.index') }}">
           <i class="material-icons">content_paste</i>
             <p>{{ __('Tasks') }}</p>
+        </a>
+      </li>
+      <li class="nav-item{{ $activePage == 'meetings' ? ' active' : '' }}">
+        <a class="nav-link" href="{{ route('meetings.index') }}">
+          <i class="material-icons">people</i>
+            <p>{{ __('Meetings') }}</p>
         </a>
       </li>
       <li class="nav-item{{ $activePage == 'typography' ? ' active' : '' }}">

@@ -33,13 +33,12 @@
                   </div>
                 </div>
 
-
-            <div class="row">
+            <!--div class="row">
             <label class="col-sm-2 col-form-label">{{ __('Participator') }}</label>
                 <div class="col-sm-7">
                     <div class="form-group{{ $errors->has('participator') ? ' has-danger' : '' }}">
                         <select class="form-control{{ $errors->has('participator') ? ' is-invalid' : '' }}" name="participator" id="input-participator" type="text" value="{{ old('name') }}" required="true" aria-required="true"/>
-                        @foreach((DB::table('users')->where('org_id', Auth::user()->org_id)->where('role', "participator")->get()) as $participator)
+                        @foreach($users as $participator)
                         <option>{{$participator->name}}</option>
                         @endforeach
                         </select>
@@ -48,12 +47,13 @@
                         @endif
                     </div>
                 </div>
-            </div>
+            </div-->
+            
             <div class="row">
                 <label class="col-sm-2 col-form-label">{{ __('Due Date') }}</label>
                 <div class="col-sm-7">
                     <div class="form-group{{ $errors->has('due_date') ? ' has-danger' : '' }}">
-                        <input class="form-control{{ $errors->has('due_date') ? ' is-invalid' : '' }}" name="due_date" id="input-due_date" type="date" placeholder="{{ __('Due Datel') }}" value="{{ old('due_date') }}" required />
+                        <input class="form-control{{ $errors->has('due_date') ? ' is-invalid' : '' }}" name="due_date" id="input-due_date" type="date" placeholder="{{ __('Due Date') }}" value="{{ old('due_date') }}" required />
                         @if ($errors->has('due_date'))
                         <span id="due_date-error" class="error text-danger" for="input-due_date">{{ $errors->first('due_date') }}</span>
                         @endif
