@@ -1,4 +1,4 @@
-@extends('layouts.app', ['class' => 'off-canvas-sidebar', 'activePage' => 'register', 'title' => __('')])
+@extends('layouts.app', ['class' => 'off-canvas-sidebar', 'activePage' => 'register', 'title' => __('Material Dashboard')])
 
 @section('content')
 <div class="container" style="height: auto;">
@@ -11,10 +11,19 @@
           <div class="card-header card-header-primary text-center">
             <h4 class="card-title"><strong>{{ __('Register') }}</strong></h4>
             <div class="social-line">
+              <a href="#pablo" class="btn btn-just-icon btn-link btn-white">
+                <i class="fa fa-facebook-square"></i>
+              </a>
+              <a href="#pablo" class="btn btn-just-icon btn-link btn-white">
+                <i class="fa fa-twitter"></i>
+              </a>
+              <a href="#pablo" class="btn btn-just-icon btn-link btn-white">
+                <i class="fa fa-google-plus"></i>
+              </a>
             </div>
           </div>
-          <div class="card-body ">
-            <p class="card-description text-center">{{ __('Create a New Account') }}</p>
+         <div class="card-body ">
+            <p class="card-description text-center">{{ __('Or Be Classical') }}</p>
             <div class="bmd-form-group{{ $errors->has('name') ? ' has-danger' : '' }}">
               <div class="input-group">
                 <div class="input-group-prepend">
@@ -62,7 +71,7 @@
             </div>
             <div class="bmd-form-group{{ $errors->has('password_confirmation') ? ' has-danger' : '' }} mt-3">
               <div class="input-group">
-                <div class="input-group-prepend">
+               <div class="input-group-prepend">
                   <span class="input-group-text">
                     <i class="material-icons">lock_outline</i>
                   </span>
@@ -75,13 +84,8 @@
                 </div>
               @endif
             </div>
-             <div class="form-group row mb-0">
-              <div class="col-md-6 offset-md-0.5">
-                    <button  id="toggle"  class="btn btn-primary">
-                        {{ __('i want to add my organization') }}
-                    </button>
-                </div>
-            </div>
+           <div> <button type="button"  id="toggle" class="btn btn-primary">Click here if you have an organization</button></div>
+
             <div id="owner" class="bmd-form-group mt-3">
               <div class="input-group">
                 <div class="input-group-prepend">
@@ -89,15 +93,12 @@
                     <i class="material-icons">work</i>
                   </span>
                 </div>
-                <input type="organization" name="organization" class="form-control" placeholder="{{ __('Organization...') }}" value="{{ old('organization') }}" >
+                <input type="text" name="organization" class="form-control" placeholder="{{ __('Organization...') }}" value="{{ old('organization') }}" >
               </div>
+             
             </div>
-            <div class="form-group row mb-0">
-              <div class="col-md-6 offset-md-0.5">
-                    <button  id="toggle1"  class="btn btn-primary">
-                        {{ __('i am not a owner') }}
-                    </button>
-                </div>
+            <div>
+            <button type="button"  id="toggle1" class="btn btn-primary">I have no organization</button>
             </div>
             <div class="form-check mr-auto ml-3 mt-3">
               <label class="form-check-label">
@@ -105,21 +106,18 @@
                 <span class="form-check-sign">
                   <span class="check"></span>
                 </span>
-                {{ __('I agree with the ') }} <a href="#">{{ __('Privacy Policy') }}</a>
+                {{ _('I agree with the ') }} <a href="#">{{ _('Privacy Policy') }}</a>
               </label>
             </div>
           </div>
-          
-
           <div class="card-footer justify-content-center">
             <button type="submit" class="btn btn-primary btn-link btn-lg">{{ __('Create account') }}</button>
-          </div>
+         </div>
         </div>
       </form>
     </div>
   </div>
 </div>
-
 <script>
 
 $(document).ready(function(){
@@ -138,4 +136,5 @@ $(document).ready(function(){
   });
 });
 </script>
+
 @endsection

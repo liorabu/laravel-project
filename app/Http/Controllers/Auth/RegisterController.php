@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use\Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
 
 class RegisterController extends Controller
 {
@@ -71,12 +73,15 @@ class RegisterController extends Controller
                                'email' => $data['email'],
                             'password' => Hash::make($data['password']),
                               'role'=>'owner',
+                              
                                ]);
                 $var1=Organization::create([
                          'owner_id'=>$var3['id'],
                            'org_name'=> $data['organization'],
                           'owner_name' =>$data['name'],       
                   ]);
+                  $org_num= DB::table('organizations')->where('org_name',$data['organization'])->where('owner_id',$var3['id'])->first()->org_num;
+                  DB::table('users')->where('email',$data['email']) ->update([ 'org_id' => $org_num]);
                    return $var3;
         }
                      $var2= User::create([

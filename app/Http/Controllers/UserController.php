@@ -79,10 +79,18 @@ class UserController extends Controller
         if (Gate::denies('owner')) {
             abort(403,"You are not allowed to be here");
        }
+       if($request->get('password')){
         $user->update(
             $request->merge(['password' => Hash::make($request->get('password'))])
                 ->except([$request->get('password') ? '' : 'password']
         ));
+    }
+    else{
+        $user->name=$request->get('name');
+        $user->email=$request->get('email');
+        $user->role=$request->get('role');
+        $user->update();
+    }
 
         return redirect()->route('user.index')->withStatus(__('User successfully updated.'));
     }

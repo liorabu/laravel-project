@@ -15,4 +15,7 @@ class Detail extends Model
     public function meeting(){
         return $this->belongsTo('App\Meeting');
     }
+    protected $fillable = [
+        'description','start_time','finish_time','meeting_id'
+   ];
 }

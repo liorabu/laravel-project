@@ -17,6 +17,6 @@ class Meeting extends Model
         return $this->hasMany('App\Detail');
     }
     protected $fillable = [
-        'title', 'date',
+        'title', 'date','start_time','finish_time',
    ];
 }

@@ -51,9 +51,9 @@
                     @endforeach
                     </tbody>
                   </table>
-                  <div class="col-md-3 text-left">
-                      <a href="{{ route('tasks.create') }}" class="btn btn-sm btn-primary">{{ __('Add Tasks') }}</a>
-                  </div>
+                  <span class="td-actions text-right">    
+                    <a href="{{route('meetings.index')}}"  class=" btn btn-primary ">return to list</a>
+                  </span>
                 </div>
               </div>
             </div>

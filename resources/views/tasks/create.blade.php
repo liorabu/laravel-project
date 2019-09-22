@@ -6,9 +6,9 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
-          <form method="post" action="{{action('TaskController@store')}}" autocomplete="off" class="form-horizontal">
+          <form method="post" action="{{action('TaskController@store',['meeting_id'=>$meeting_id])}}" autocomplete="off" class="form-horizontal">
             @csrf
-            @method('post')
+            @method('GET')
 
             <div class="card ">
               <div class="card-header card-header-primary">
@@ -18,7 +18,7 @@
               <div class="card-body ">
                 <div class="row">
                   <div class="col-md-12 text-right">
-                      <a href="{{ route('tasks.index') }}" class="btn btn-sm btn-primary">{{ __('Back to list') }}</a>
+                      <a href="{{ route('meetings.index') }}" class="btn btn-sm btn-primary">{{ __('Back to list') }}</a>
                   </div>
                 </div>
                 <div class="row">
@@ -33,7 +33,7 @@
                   </div>
                 </div>
 
-            <!--div class="row">
+            <div class="row">
             <label class="col-sm-2 col-form-label">{{ __('Participator') }}</label>
                 <div class="col-sm-7">
                     <div class="form-group{{ $errors->has('participator') ? ' has-danger' : '' }}">
@@ -47,7 +47,7 @@
                         @endif
                     </div>
                 </div>
-            </div-->
+            </div>
             
             <div class="row">
                 <label class="col-sm-2 col-form-label">{{ __('Due Date') }}</label>

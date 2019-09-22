@@ -47,9 +47,9 @@ class TaskController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($meeting_id)
     {
-        $meeting_id=DB::table('meetings')->where('invitor_id', Auth::user()->id)->max('id');
+       
         $users_in=DB::table('meeting_users')->where('meeting_id',$meeting_id)->pluck('user_id');
         $users=User::whereIn('id',$users_in)->where('role',"participator")->get();
 
@@ -62,30 +62,32 @@ class TaskController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $meeting_id)
     {
         if (Gate::denies('invitor')) {
             abort(403,"You are not allowed to add a task");
        }
        $id=Auth::user()->id;
-       $meeting_id=DB::table('meetings')->where('invitor_id', $id)->max('id');
+      $meeting=Meeting::where('id', $meeting_id)->first();
        $users_in=DB::table('meeting_users')->where('meeting_id',$meeting_id)->pluck("user_id");
        $org_id=Auth::user()->org_id;
 
         $task = new Task();
         $id = Auth::user()->id;
         $task->description = $request->description;
-       // $task->participator_id=User::where('name',$request->participator)->first()->id;
+        $task->due_date=$request->due_date;
+
+      $task->participator_id=User::where('name',$request->participator)->value('id');
         $task->invitor_id=$id;
         $task->meeting_id=$meeting_id;
-        $task->due_date=$request->due_date;
         $task->status = 0;
         $task->org_id=Auth::user()->org_id;
         $task->save();
 
-        $users=User::whereIn('id',$users_in)->where('role',"participator")->get();
-
-        return view('tasks.create',['users'=>$users]);
+        $users=User::whereIn('id',$users_in)->where('role',"participator")->first()->get();
+        $details=Detail::where('meeting_id',$meeting_id)->get();
+        return view('details.showInfo',['meeting'=>$meeting,'details'=>$details]);
+        
 
         
     }

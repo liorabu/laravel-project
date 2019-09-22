@@ -1,7 +1,6 @@
 @extends('layouts.app', ['activePage' => 'add detail', 'titlePage' => __('Add Detail')])
 
 @section('content')
-
 <div class="content">
     <div class="container-fluid">
         <div class="row">
@@ -12,8 +11,33 @@
                         <div class="card-header card-header-primary">
                             <h4 class="card-title">{{ __('New Detail') }}</h4>
                             <p class="card-category"></p>
-                        </div>                       
+                        </div>
+                              
                         <div class="card-body ">
+                        @if(Session::has('flash_message'))
+                            <div class="row">
+                                <div class="col-sm-12">
+                                <div class="alert alert-danger">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <i class="material-icons">close</i>
+                                    </button>
+                                    {{ Session::get('flash_message') }}
+                                </div>
+                                </div>
+                            </div>
+                            @endif
+                            @if(Session::has('low_message'))
+                            <div class="row">
+                                <div class="col-sm-12">
+                                <div class="alert alert-success">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <i class="material-icons">close</i>
+                                    </button>
+                                    {{ Session::get('low_message') }}
+                                </div>
+                                </div>
+                            </div>
+                        @endif         
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">{{ __('Description') }}</label>
                                 <div class="col-sm-7">
@@ -47,16 +71,16 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-footer ml-auto mr-auto">
-                                <button type="submit" class="btn btn-primary"onclick="confirm('{{ __("Are you sure you want to fire this user?") }}') ? this.parentElement.submit() : ''">{{ __('Add Details') }}</button>
+                            <span class="td-actions text-left">
+                                <button type="submit" class="btn btn-primary">{{ __('Add Detail') }}</button>
                                                           
-                           </div> 
+                           </span> 
                            
-                           @if(!DB::table('details')->where('meeting_id',$meeting_id)->count()<$min_details)
-                           <div class="card-footer ml-auto mr-auto">
+                           @if(!(DB::table('details')->where('meeting_id',$meeting_id)->count()<$min_details))
+                           <span class="td-actions text-right">
                         
-                                <a href="{{route('add_users')}}"  class="text-left btn btn-primary"style="float: right;">add participants</a>
-                                </div>
+                                <a href="{{route('add_users')}}"  class=" btn btn-primary ">add participants</a>
+                                </span>
                                 @endif 
 
                                        

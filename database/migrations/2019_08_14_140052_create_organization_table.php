@@ -19,6 +19,7 @@ class CreateOrganizationTable extends Migration
             $table->integer('owner_id')->nullable();
             $table->string('owner_name')->nullable();
             $table->integer('schedule')->default(1);
+            $table->dateTime('schedule_update')->default(now());
             $table->timestamps();
         });
     }

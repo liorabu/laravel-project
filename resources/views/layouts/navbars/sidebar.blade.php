@@ -9,6 +9,8 @@
       {{ __('Appointments') }}
     </a>
   </div>
+  @if(Auth::user()->org_id!=0)
+
   <div class="sidebar-wrapper">
     <ul class="nav">
       <li class="nav-item{{ $activePage == 'dashboard' ? ' active' : '' }}">
@@ -29,11 +31,9 @@
        
         <div class="collapse hide" id="laravelExample">
         @endcan
-        
         @canany(['invitor', 'participator']) 
         <div class="collapse show" id="laravelExample">
         @endcan
-
           <ul class="nav">
             <li class="nav-item{{ $activePage == 'profile' ? ' active' : '' }}">
               <a class="nav-link" href="{{ route('profile.edit') }}">
@@ -41,11 +41,13 @@
               @canany(['owner', 'admin']) 
                 <span class="sidebar-normal">{{ __('Edit Profile') }} </span>
                 @endcan
+            
                 @canany(['invitor', 'participator']) 
                 <p>{{ __('Edit Profile') }}</p>
                 @endcan
               </a>
             </li>
+            
             @canany(['owner', 'admin']) 
             <li class="nav-item{{ $activePage == 'user-management' ? ' active' : '' }}">
               <a class="nav-link" href="{{ route('user.index') }}">
@@ -87,7 +89,42 @@
           <p>{{ __('Notifications') }}</p>
         </a>
       </li>
-
+      @can('owner')
+      <li class="nav-item{{ $activePage == 'requests' ? ' active' : '' }}">
+        <a class="nav-link" href="{{ route('requests.index') }}">
+          <i class="material-icons">mail_outline</i>
+          <p>{{ __('Requests') }}</p>
+        </a>
+      </li>
+@endcan
     </ul>
   </div>
+  @else
+  <ul class="nav">
+  <div class="sidebar-wrapper">
+            <li class="nav-item{{ $activePage == 'profile' ? ' active' : '' }}">
+              <a class="nav-link" href="{{ route('profile.edit') }}">
+              <i class="material-icons">edit</i>
+              @canany(['owner', 'admin']) 
+                <span class="sidebar-normal">{{ __('Edit Profile') }} </span>
+                @endcan
+            
+                @canany(['invitor', 'participator']) 
+                <p>{{ __('Edit Profile') }}</p>
+                @endcan
+              </a>
+        </li>
+        <li class="nav-item{{ $activePage == 'home' ? ' active' : '' }}">
+        <a class="nav-link" href="{{ route('home') }}">
+              <i class="material-icons">search</i>
+            
+                <p>{{ __('Find Your Organization') }}</p>
+                
+              </a>
+        </li>
+</ul>
+ @endif
+
+
+
 </div>

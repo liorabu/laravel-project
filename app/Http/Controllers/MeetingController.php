@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Meeting;
 use App\Detail;
+use App\Task;
+use App\Organization;
+use Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -35,8 +38,28 @@ class MeetingController extends Controller
             $meeting_id=DB::table('meeting_users')->where('user_id', $user_id)->pluck('meeting_id');
             $meetings=Meeting::where('org_id',$org_id)->whereIn('id',$meeting_id)->orderBy('date', 'asc')->get();
         }
+        
+        $last_meeting_id=Meeting::where('org_id',$org_id)->where('invitor_id',$user_id)->orderBy('id','Desc')->max('id');
+        
+        
+      $last_meeting=Meeting::where('id',$last_meeting_id)->get();
 
-        return view('meetings.index', compact('meetings'));     
+       
+        $schedule_last_update=Organization::where('org_num',$org_id)->pluck('schedule_update');
+
+        $min_details=Organization::where('org_num',$org_id)->pluck("schedule");
+
+        $num_of_details = Detail::rightJoin('meetings', 'details.meeting_id', '=', 'meetings.id')
+          ->select( DB::raw('count(details.id) row , meetings.id') )
+           ->groupBy('meetings.id')->where('meetings.id', $last_meeting_id)->pluck('row');
+
+          
+            
+      if($last_meeting->pluck('created_at') > $schedule_last_update AND $num_of_details < $min_details){
+      
+    return $this->destroy($last_meeting_id);
+   }
+    return view('meetings.index',['meetings'=>$meetings]);     
     }
 
     /**
@@ -71,12 +94,14 @@ class MeetingController extends Controller
         $meeting->invitor_id = $id;
         $meeting->date = $request->date;
         $meeting->org_id=$org_id;
-        $meeting->save();
-       // $users=User::where('org_id',$org_id)->where("role","!=","invitor")->get();
-       $users_in=DB::table('meeting_users')->where('meeting_id',$meeting->id)->pluck("user_id");
 
-      //  return view('details.create',['users'=>$users,'users_in'=>$users_in,'meeting_id'=>$meeting->id]);
-       $min_details=DB::table('organizations')->where('org_num',$org_id)->pluck("schedule");
+        if($request->date<date('Y-m-d')){
+            Session::flash('flash_message', 'The date has already passed.');
+            return view('meetings.create');
+        }
+        $meeting->save();
+       $users_in=DB::table('meeting_users')->where('meeting_id',$meeting->id)->pluck("user_id");
+       $min_details=DB::table('organizations')->where('org_num',$org_id)->value("schedule");
       
       return view('details.create',['org_id'=>$org_id,'meeting_id'=>$meeting->id,'min_details'=>$min_details,'invitor'=>$id,'users_in'=>$users_in]);
 
@@ -142,9 +167,9 @@ class MeetingController extends Controller
     {
        $meeting=Meeting::find($id);
        $meeting->delete();
-       $meetings=DB::table('meeting_users')->where('meeting_id', $id)->delete();
-       $details=DB::table('details')->where('meeting_id', $id)->delete();
-       $tasks=DB::table('tasks')->where('meeting_id', $id)->delete();
+       //$meetings=DB::table('meeting_users')->where('meeting_id', $id)->delete();
+       $details=Detail::where('meeting_id', $id)->delete();
+       $tasks=Task::where('meeting_id', $id)->delete();
        return redirect('meetings');
     }
 
@@ -170,6 +195,27 @@ class MeetingController extends Controller
         $users=DB::table('users')->where('org_id',Auth::user()->org_id)->where('role','!=','invitor')->get();
         $users_new=DB::table('meeting_users')->where('meeting_id',$meeting_id)->pluck("user_id");
         return view('meetings.addUsers',['invitor'=>Auth::user(),'users_in'=>$users_new,'org_id'=>$org_id,'meeting_id'=>$meeting_id,'users'=>$users]);
+    }
+    public function minDetails(){
+        $id=Auth::id();
+        $org_num=User::where('id',$id)->value('org_id');
+        $min=Organization::where('org_num',$org_num)->value('schedule');
+        return view('meetings.minDetails',['org_num'=>$org_num,'min'=>$min]);
+    }
+
+
+    public function UpdateDetails(Request $request){ 
+        $id=Auth::id();
+        $org_num=User::where('id',$id)->value('org_id');
+        $min=$request->min;
+
+
+
+        DB::table('organizations')
+            ->where('org_num', $org_num)
+           ->update(['schedule' => $min,'schedule_update'=>now()]);
+           return redirect('meetings');
+
     }
 
     

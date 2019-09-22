@@ -19,6 +19,8 @@ class CreateMeetingsTable extends Migration
             $table->integer('invitor_id');
             $table->date('date');
             $table->integer('org_id');
+            $table->time('start_time')->default(null)->nullable();
+            $table->time('finish_time')->default(null)->nullable();
             $table->timestamps();
 
         });

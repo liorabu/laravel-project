@@ -18,17 +18,33 @@ Route::get('/home', 'HomeController@index')->name('home')->middleware('auth');
 
 Route::resource('tasks','TaskController')->middleware('auth');
 
+Route::get('tasks/create/{meeting_id}', 'TaskController@create')->name('tasks.create');
+Route::get('tasks/store/{meeting_id}', 'TaskController@store')->name('tasks.store');
+
+
 Route::get('tasks/status/{id}', 'TaskController@update_status')->name('update_status');
 
 Route::resource('meetings','MeetingController')->middleware('auth');
+
+Route::get('details.showInfo/{meeting_id}','DetailController@showInfo')->name('showInfo');
 
 Route::resource('details','DetailController')->middleware('auth');
 
 Route::get('add_users', 'DetailController@add_users')->name('add_users');
 
+Route::get('change_status/{id}', 'DetailController@change_status')->name('change_status');
+
 Route::get('meetings/show_users', 'MeetingController@show_users')->name('show_users');
 
 Route::get('meetings/connect_between/{user_id}/{meeting_id}', 'MeetingController@connect_between')->name('connect_between');
+
+Route::get('minDetails', 'MeetingController@minDetails')->name('minDetails');
+
+Route::get('UpdateDetails', 'MeetingController@UpdateDetails')->name('UpdateDetails');
+
+Route::get('/re','HomeController@re')->name('re');
+Route::resource('requests', 'JoinController')->middleware('auth');
+Route::get('requests/{id}/{status}/{org_id}','JoinController@status')->name('status');
 
 
 Auth::routes();

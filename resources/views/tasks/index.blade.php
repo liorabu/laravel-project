@@ -84,25 +84,11 @@
                             <td class="td-actions text-left">
                                 <i class="material-icons">done</i>
                               </td> 
-                            @endif                     
-                                          
+                            @endif                                                              
                       </tr>
-
-
                         @endif
-
                       </tr>
                       @endforeach
-
-
-
-
-
-
-
-
-
-
 
                     </tbody>
                   </table>

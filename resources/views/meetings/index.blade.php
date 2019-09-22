@@ -28,13 +28,16 @@
 
               @canany(['owner', 'admin']) 
             <div class="card-body">
+            
+            
               <div class="row">
                   <div class="col-12 text-right">
-                    <a href="{{ route('meetings.create') }}" class="btn btn-sm btn-primary">{{ __('Min Schedule Items') }}</a>
+                    <a href="{{route('minDetails')}}" class="btn btn-sm btn-primary">{{ __('Min Schedule Items') }}</a>
                   </div>
                 </div>
               @endcan
 
+             
                 <div class="table-responsive">
                   <table class="table">
                     <thead class=" text-primary">
@@ -54,17 +57,22 @@
                     <tbody>
 
                       @foreach($meetings as $meeting)
+                      
                       <tr>
-                        <td>@can('invitor')<a href="{{ route('meetings.edit', $meeting->id)}}">@endcan{{$meeting->title}}</a></td>
+                        <td><a href="{{ route('showInfo', ['meeting_id'=>$meeting->id])}}">{{$meeting->title}}</a></td>
                         <td>{{DB::table('users')->where('id', $meeting->invitor_id)->first()->name}} </td>
                         <td>{{ date('d-M-y', strtotime($meeting->date)) }}</td>
                         @can("invitor")
                         @if($meeting->invitor_id==Auth::user()->id)
+                       
                         <td class="td-actions text-left">
-                          <a href="{{route('meetings.edit', $meeting->id)}}" type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
+                        @if(($meeting->date > date('Y-m-d')) OR ($meeting->date==date('Y-m-d') AND $meeting->start_time > date("H:i:s")))
+                          <a href="{{route('meetings.edit', $meeting->id)}}" type="button" rel="tooltip" title="Edit" class="btn btn-primary btn-link btn-sm">
                             <i class="material-icons">edit</i>
                           </button>
-
+                         
+                         
+                         
                           <form style="display:inline-block;  margin-left:30px"  method='post' action="{{action('MeetingController@destroy', $meeting->id)}}"> 
                               @csrf
                               @method('DELETE')
@@ -73,10 +81,8 @@
                               </button>
                           </form>
 
-                          <a href="{{route('show_users', [ $meeting->id])}}" style="display:inline-block;  margin-left:30px" type="button" rel="tooltip" title="edit participators" class="btn btn-primary btn-link btn-sm">
-                              <i class="material-icons">person_pin</i>
-                          </a>
-
+                         
+                          @endif
                         </td>  
                            @endcan
                         @endcan 

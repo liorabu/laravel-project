@@ -14,6 +14,6 @@ class Organization extends Model
         return $this->hasMany('App\Detail');
     }
     protected $fillable = [
-                'org_name', 'owner_name','owner_id',
+                'org_name', 'owner_name','owner_id','schedule'
            ];
 }
