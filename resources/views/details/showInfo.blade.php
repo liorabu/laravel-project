@@ -50,7 +50,7 @@
                         <td>{{$detail->start_time}}</td>
                         <td>{{$detail->finish_time}}</td>
                         <td>
-                      @if($meeting->date==date('Y-m-d') AND $meeting->start_time < date("H:i:s") AND $meeting->finish_time > date("H:i:s"))                         
+                      @if($meeting->date==date('Y-m-d') AND $meeting->start_time > date("H:i:s") AND $meeting->finish_time < date("H:i:s"))                         
                           @if(!$detail->status)
                             @can('invitor')
                             <a href="{{route('change_status',['detail->id'=>$detail->id])}}" type="button" rel="tooltip" title="Done" class="btn btn-primary btn-link btn-sm">
@@ -60,6 +60,7 @@
                             @else {{'This detail is already being discussed'}}
                             @endif
                        @endif
+                      
                         </td>
                         
                     </tr>

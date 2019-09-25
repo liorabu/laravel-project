@@ -71,7 +71,7 @@
             <p>{{ __('Meetings') }}</p>
         </a>
       </li>
-      <li class="nav-item{{ $activePage == 'typography' ? ' active' : '' }}">
+      <!--li class="nav-item{{ $activePage == 'typography' ? ' active' : '' }}">
         <a class="nav-link" href="{{ route('typography') }}">
           <i class="material-icons">library_books</i>
             <p>{{ __('Typography') }}</p>
@@ -88,7 +88,7 @@
           <i class="material-icons">notifications</i>
           <p>{{ __('Notifications') }}</p>
         </a>
-      </li>
+      </li-->
       @can('owner')
       <li class="nav-item{{ $activePage == 'requests' ? ' active' : '' }}">
         <a class="nav-link" href="{{ route('requests.index') }}">

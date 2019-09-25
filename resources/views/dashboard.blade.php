@@ -1,126 +1,254 @@
 @extends('layouts.app', ['activePage' => 'dashboard', 'titlePage' => __('Dashboard')])
 
 @section('content')
+
   <div class="content">
     <div class="container-fluid">
+
       <div class="row">
       <div class="col-lg-3 col-md-6 col-sm-6">
           <div class="card card-stats">
             <div class="card-header card-header-warning card-header-icon">
               <div class="card-icon">
-                <i class="material-icons">list_alt</i>
+                <i class="material-icons">person</i>
               </div>
-              <p class="card-category">Owner</p>
-              <h3 class="card-title">Daniel</h3>
+              <p class="card-category">User</p>
+              <h3 class="card-title">{{$user->name}}</h3>
             </div>
+
             <div class="card-footer">
               <div class="stats">
-                <i class="material-icons">view_module</i> 21/08/19
+                <i class="material-icons"></i> role: {{$user->role}}
               </div>
             </div>
           </div>
         </div>
-        <div class="col-lg-3 col-md-6 col-sm-6">
-          <div class="card card-stats">
-            <div class="card-header card-header-success card-header-icon">
-              <div class="card-icon">
-                <i class="material-icons">query_builder</i>
+
+        @if($next_meeting)
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats">
+              <div class="card-header card-header-success card-header-icon">
+                <div class="card-icon">
+                  <i class="material-icons">people_alt</i>
+                </div>
+                <p class="card-category">Next Meeting</p>
+                <h3 class="card-title">{{ $next_meeting->title}}</h3>
               </div>
-              <p class="card-category">Next Meeting</p>
-              <h3 class="card-title">1/09/19</h3>
-            </div>
-            <div class="card-footer">
-              <div class="stats">
-              <i class="material-icons">date_range</i> 4/09/19
+              <div class="card-footer">
+                <div class="stats">
+                <i class="material-icons">date_range</i>{{date('d-M-y',strtotime($next_meeting->date))}}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        
+        @else
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats">
+              <div class="card-header card-header-success card-header-icon">
+                <div class="card-icon">
+                  <i class="material-icons">people_alt</i>
+                </div>
+                <p class="card-category">Next Meeting</p>
+                <h3 class="card-title">No future meetings</h3>
+              </div>
+              <div class="card-footer">
+              </div>
+            </div>
+          </div>
+        
+        @endif
+
+        @if($earliest_task)
         <div class="col-lg-3 col-md-6 col-sm-6">
           <div class="card card-stats">
             <div class="card-header card-header-danger card-header-icon">
               <div class="card-icon">
-                <i class="material-icons">info_outline</i>
+                <i class="material-icons">assignment</i>
               </div>
-              <p class="card-category">Important tasks</p>
-              <h3 class="card-title">Make the web</h3>
+              <p class="card-category">Next task</p>
+              <h3 class="card-title">{{$earliest_task->pluck('description')->first()}}</h3>
             </div>
             <div class="card-footer">
               <div class="stats">
-                <i class="material-icons">local_offer</i> task owner Roni 
+              <i class="material-icons">date_range</i> {{date('d-M-y',strtotime($earliest_task->pluck("due_date")->first()))}}
               </div>
             </div>
           </div>
         </div>
+        
+        @elseif($earliest_task=='')
+          <div class="col-lg-3 col-md-6 col-sm-6">
+          <div class="card card-stats">
+            <div class="card-header card-header-danger card-header-icon">
+              <div class="card-icon">
+                <i class="material-icons">assignment</i>
+              </div>
+              <p class="card-category">Next task</p>
+              <h3 class="card-title">There are no open tasks</h3>
+            </div>
+            <div class="card-footer">
+            </div>
+          </div>
+        </div>
+        
+        @endif
+
         <div class="col-lg-3 col-md-6 col-sm-6">
           <div class="card card-stats">
             <div class="card-header card-header-info card-header-icon">
               <div class="card-icon">
-              <i class="material-icons">person_add</i>
+              <i class="material-icons">people</i>
               </div>
-              <p class="card-category">ONLINE</p>
-              <h3 class="card-title">14</h3>
+              <p class="card-category">Organization</p>
+              <h3 class="card-title">{{$organization}}</h3>
             </div>
             <div class="card-footer">
               <div class="stats">
-                <i class="material-icons">update</i> Just Updated
+                <i class="material-icons">person</i> Owner: {{$owner}}
               </div>
             </div>
           </div>
         </div>
-      </div>      
+
+      </div>  
+
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-6">
           <div class="card card-chart">
-            <div class="card-header card-header-success">
-              <div class="ct-chart" id="dailySalesChart"></div>
+           @if($meetings)
+            <div class="card-body alert-info" >
+              <h4 class="card-title">Meetings related to you</h4>
+              <p class="card-category">Total Meetings: {{$meetings->count()}}</p>
+              <p class="card-category">Meetings Held: {{$meetings->count()-$next_meetings->count()}} , {{number_format(($meetings->count()-$next_meetings->count())/$meetings->count()*100,2)}}%  </p>
+              <p class="card-category">Future Meetings: {{$next_meetings->count()}} , {{number_format(($next_meetings->count())/$meetings->count()*100,2)}}%  </p>
             </div>
-            <div class="card-body">
-              <h4 class="card-title">Daily Sales</h4>
-              <p class="card-category">
-                <span class="text-success"><i class="fa fa-long-arrow-up"></i> 60% </span> increase in today sales.</p>
+          @else
+            <div class="card-body alert-info" >
+            <h4 class="card-title">Meetings related to you</h4>
+            <p class="card-category">There are no meetings for you </p>
             </div>
-            <div class="card-footer">
-              <div class="stats">
-                <i class="material-icons">access_time</i> updated 4 minutes ago
-              </div>
-            </div>
+          @endif
           </div>
         </div>
-        <div class="col-md-4">
+        
+        @php
+          $delayded_tasks=0;
+        @endphp
+        @if($tasks)
+        @foreach($tasks as $task) 
+          @if($task->status==1 AND strtotime($task->execution_date)>strtotime($task->due_date))
+              @php
+                $delayded_tasks+=1;
+              @endphp  
+          @endif  
+        @endforeach
+        @endif  
+        
+        <div class="col-md-6">
           <div class="card card-chart">
-            <div class="card-header card-header-warning">
-              <div class="ct-chart" id="websiteViewsChart"></div>
+          @if($tasks)
+            <div class="card-body alert-info" >
+              <h4 class="card-title">Tasks Per Meeting</h4>
+              <p class="card-category">Total Tasks: {{$tasks->count()}}</p>
+              <p class="card-category">Open Tasks: {{$tasks->where('status',0)->count()}} , {{number_format($tasks->where('status',0)->count()/$tasks->count()*100,2)}}% </p>
+              <p class="card-category">Tasks performed on time: {{$tasks->count()-$delayded_tasks-$tasks->where('status',0)->count()}} , {{number_format(($tasks->count()-$delayded_tasks-$tasks->where('status',0)->count())/$tasks->count()*100,2)}}% </p>
+              <p class="card-category">Delayed tasks: {{$delayded_tasks}} , {{number_format($delayded_tasks/$tasks->count()*100,2)}}% </p>   
             </div>
-            <div class="card-body">
-              <h4 class="card-title">Email Subscriptions</h4>
-              <p class="card-category">Last Campaign Performance</p>
+            @else
+            <div class="card-body alert-info" >
+            <h4 class="card-title">Tasks related to you</h4>
+            <p class="card-category">There are no tasks for you </p>
             </div>
-            <div class="card-footer">
-              <div class="stats">
-                <i class="material-icons">access_time</i> campaign sent 2 days ago
-              </div>
-            </div>
+          @endif
           </div>
         </div>
-        <div class="col-md-4">
-          <div class="card card-chart">
-            <div class="card-header card-header-danger">
-              <div class="ct-chart" id="completedTasksChart"></div>
-            </div>
-            <div class="card-body">
-              <h4 class="card-title">Completed Tasks</h4>
-              <p class="card-category">Last Campaign Performance</p>
-            </div>
-            <div class="card-footer">
-              <div class="stats">
-                <i class="material-icons">access_time</i> campaign sent 2 days ago
-              </div>
-            </div>
-          </div>
-        </div>
+
       </div>
+
       <div class="row">
+        <div class="col-md-6">
+          <div class="card card-chart">
+          @if($tasks_per_meeting)
+            <div class="card-body alert-info" >
+              <h4 class="card-title">Tasks Per Meeting</h4>
+              <p class="card-category">Max Tasks Per Meeting: {{$tasks_per_meeting->max('tasks')}}</p>
+             
+              @if($meetings->count() > $tasks->count('DISTINCT meeting_id')) 
+              <p class="card-category">Min Tasks Per Meeting: 0 </p>
+              @else
+              <p class="card-category">Min Tasks Per Meeting: {{$tasks_per_meeting->min('tasks')}} </p>
+              @endif
+              <p class="card-category">Average Tasks Per Meeting: {{number_format($tasks->count()/$meetings->count(),2)}}  </p>  
+            </div>
+            @else
+            <div class="card-body alert-info" >
+            <h4 class="card-title">Tasks related to you</h4>
+            <p class="card-category">There are no tasks for you </p>
+            </div>
+          @endif
+          </div>
+        </div>
+
+
+        @php
+          $max_time=0;
+          $min_time=10000;
+          $longest_meeting=0;
+          $shortest_meeting=0;
+        @endphp
+        @if($meetings)
+        @foreach($meetings as $meeting) 
+          @if((strtotime($meeting->finish_time )-strtotime($meeting->start_time )) > $max_time)
+              @php
+                $max_time=strtotime($meeting->finish_time)-strtotime($meeting->start_time);
+                $longest_meeting=$meeting;
+              @endphp  
+          @elseif(strtotime($meeting->finish_time )-strtotime($meeting->start_time ) < $min_time) 
+            @php
+            $min_time=strtotime($meeting->finish_time)-strtotime($meeting->start_time);
+            $shortest_meeting=$meeting;
+            @endphp
+          @endif
+        @endforeach
+        @endif 
+        @if($details)
+        @php
+          $max_details=$details->max('details');
+          $max_details_meeting=$details->where('details',$max_details)->min('id');
+          $max_details_meeting= $meetings->where('id',$max_details_meeting);
+
+          $min_details=$details->min('details');
+          $min_details_meeting=$details->where('details',$min_details)->min('id');
+          $min_details_meeting= $meetings->where('id',$min_details_meeting);
+        
+        @endphp 
+        @endif
+
+        <div class="col-md-6">
+          <div class="card card-chart">
+          @if($meetings)
+            <div class="card-body alert-info" >
+              <h4 class="card-title">Tasks Per Meeting</h4>
+              <p class="card-category">The longest meeting: {{$longest_meeting->title}} </p>
+              <p class="card-category">The shortest meeting: {{$shortest_meeting->title}} </p>
+              <p class="card-category">The meeting with the most meeting details: {{$max_details_meeting->first()->title}} </p>
+              <p class="card-category">The meeting with the least meeting details: {{$min_details_meeting->first()->title}} </p>
+              
+            </div>
+            @else
+            <div class="card-body alert-info" >
+            <h4 class="card-title">Tasks related to you</h4>
+            <p class="card-category">There are no tasks for you </p>
+            </div>
+          @endif
+          </div>
+        </div>
+
+
+    </div>
+
+      <!--div class="row">
         <div class="col-lg-6 col-md-12">
           <div class="card">
             <div class="card-header card-header-tabs card-header-primary">
@@ -132,6 +260,7 @@
                 </div>
               </div>
             </div>
+
             <div class="card-body">
               <div class="tab-content">
                 <div class="tab-pane active" id="profile">
@@ -148,6 +277,7 @@
                             </label>
                           </div>
                         </td>
+
                         <td>Sign contract for "What are conference organizers afraid of?"</td>
                         <td class="td-actions text-right">
                           <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
@@ -158,6 +288,7 @@
                           </button>
                         </td>
                       </tr>
+
                       <tr>
                         <td>
                           <div class="form-check">
@@ -169,6 +300,7 @@
                             </label>
                           </div>
                         </td>
+
                         <td>Lines From Great Russian Literature? Or E-mails From My Boss?</td>
                         <td class="td-actions text-right">
                           <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
@@ -268,7 +400,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div-->
     </div>
   </div>
 @endsection

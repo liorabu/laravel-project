@@ -51,6 +51,9 @@ class DetailController extends Controller
      */
     public function store(Request $request)
     { 
+        if (Gate::denies('invitor')) {
+            abort(403,"You are not allowed to add a detail");
+        }
       
         session()->forget('flash_message');
         $id = Auth::user()->id;
@@ -110,7 +113,15 @@ class DetailController extends Controller
      */
     public function edit($id)
     {
+        if (Gate::denies('invitor')) {
+            abort(403,"Sorry, you can not edit a detail!");
+        }
+        
+       
         $detail=Detail::find($id);
+        if($detail->invitor_id!=Auth::id()){
+            abort(403,"Sorry, you can not edit this detail!");
+        }
 
         //current meeting
         $meeting=Meeting::where('id',$detail->meeting_id)->first();
@@ -136,12 +147,22 @@ class DetailController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if (Gate::denies('invitor')) {
+            abort(403,"Sorry, you can not update a detail!");
+        }
         
+       
         $detail=Detail::find($id);
+        if($detail->invitor_id!=Auth::id()){
+            abort(403,"Sorry, you can not update this detail!");
+        }
+        
+        
         $current_meeting_id=$detail->meeting_id;
 
 
-        $detail->meeting_id=Meeting::where('title',$request->meeting)->first()->id;
+        //$detail->meeting_id=Meeting::where('title',$request->meeting)->first()->id;
+        $detail->description=$request->description;
         $detail->start_time=$request->start_time;
         $detail->finish_time=$request->finish_time;
 
@@ -169,11 +190,34 @@ class DetailController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (Gate::denies('invitor')) {
+            abort(403,"Sorry, you can not delete a detail!");
+        }
+        
+       
+        $detail=Detail::find($id);
+        if($detail->invitor_id!=Auth::id()){
+            abort(403,"Sorry, you can not delete this detail!");
+        }
+        
+
+        $detail=Detail::find($id);
+        $meeting_id=$detail->meeting_id;
+        $detail->delete();
+
+
+        $meeting=Meeting::where('id',$meeting_id )->first();
+       $details=Detail::where('meeting_id',$meeting_id)->get();
+        $min_details=Organization::where('org_num',Auth::user()->org_id)->value('schedule');
+        return view('details.showInfo',['meeting'=>$meeting,'details'=>$details,'min_details'=>$min_details]);
+       
     }
 
     public function add_users(){
-        //return view('meetings.index');
+        if (Gate::denies('invitor')) {
+            abort(403,"Sorry, you can not add users!");
+        }
+        
         $meeting_id=DB::table('meetings')->where('invitor_id', Auth::user()->id)->max('id');
         $users=DB::table('users')->where('org_id',Auth::user()->org_id)->where('role','!=','invitor')->get();
 
@@ -181,12 +225,24 @@ class DetailController extends Controller
     }
     public function showInfo($id)
     {
+        
         $meeting=Meeting::find($id);
-        $details=Detail::where('meeting_id',$id)->get();
-        return view('details.showInfo',['meeting'=>$meeting,'details'=>$details]);
+        $details=Detail::where('meeting_id',$id)->orderBy('start_time','asc')->get();
+        $min_details=Organization::where('org_num',Auth::user()->org_id)->value('schedule');
+        return view('details.showInfo',['meeting'=>$meeting,'details'=>$details,'min_details'=>$min_details]);
     }
     public function change_status($id)
     {
+        if (Gate::denies('invitor')) {
+            abort(403,"Sorry, you can not change the status!");
+        }
+        
+       
+        $detail=Detail::find($id);
+        if($detail->invitor_id!=Auth::id()){
+            abort(403,"Sorry, you can not change the status!");
+        }
+        
         $detail=Detail::find($id);
         $detail->status=1;
         $detail->save();

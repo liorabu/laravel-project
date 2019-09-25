@@ -29,14 +29,15 @@ class TaskController extends Controller
 
         if($role=="participator")
         {
-            $tasks = Task::where('participator_id',  $id)->where('org_id', $org_id)->get();
+            $tasks = Task::where('participator_id',  $id)->where('org_id', $org_id)->orderBy('due_date','asc')->get();
         }
         else if($role=="invitor")
         {
-            $tasks = Task::where('invitor_id',  $id)->where('org_id', $org_id)->get();
+            $tasks = Task::where('invitor_id',  $id)->where('org_id', $org_id)->orderBy('due_date','asc')->get();
         }
         else{
-            $tasks=Task::where('org_id', $org_id)->get();   
+            $meeting_ids=DB::table('meeting_users')->where('user_id',$id)->pluck('meeting_id');  
+            $tasks=Task::where('org_id', $org_id)->whereIn('meeting_id', $meeting_ids)->orderBy('due_date','asc')->get();   
         }
        
         return view('tasks.index', compact('tasks')); 
@@ -49,7 +50,9 @@ class TaskController extends Controller
      */
     public function create($meeting_id)
     {
-       
+        if (Gate::denies('invitor')) {
+            abort(403,"You are not allowed to add a task");
+        }
         $users_in=DB::table('meeting_users')->where('meeting_id',$meeting_id)->pluck('user_id');
         $users=User::whereIn('id',$users_in)->where('role',"participator")->get();
 

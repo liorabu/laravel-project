@@ -83,6 +83,16 @@
               </div>
             </div>
           </form>
+
+          @if(DB::table('details')->where('meeting_id',$meeting->id)->count() > $min_details)
+            <form style="display:inline-block;  margin-left:30px"  method='post' action="{{action('DetailController@destroy',  $detail->id)}}"> 
+                @csrf
+                @method('DELETE')
+                <button type="submit" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
+                <i class="material-icons">close</i>
+                </button>
+            </form>
+          @endif
         </div>
       </div>
     </div>

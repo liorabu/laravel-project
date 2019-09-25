@@ -132,6 +132,10 @@ class MeetingController extends Controller
         }
 
         $meeting = Meeting::find($id);
+        if($meeting->invitor_id!=Auth::id()){
+            abort(403,"Sorry, you can not edit this meeting!");
+        }
+        
         $org_id=Auth::user()->org_id;
 
         $users_id=DB::table('meeting_users')->where('meeting_id', $id)->pluck('user_id');
@@ -165,7 +169,15 @@ class MeetingController extends Controller
      */
     public function destroy($id)
     {
+        if (Gate::denies('invitor')) {
+            abort(403,"Sorry, you can not delete a meeting!");
+        }
+        
        $meeting=Meeting::find($id);
+       if($meeting->invitor_id!=Auth::id()){
+        abort(403,"Sorry, you can not delete this meeting!");
+    }
+    
        $meeting->delete();
        //$meetings=DB::table('meeting_users')->where('meeting_id', $id)->delete();
        $details=Detail::where('meeting_id', $id)->delete();
@@ -178,7 +190,12 @@ class MeetingController extends Controller
 
     }
 
-    public function connect_between($user_id,$meeting_id){ 
+    public function connect_between($user_id,$meeting_id){
+        if (Gate::denies('invitor')) {
+            abort(403,"Sorry, you can not edit a meeting!");
+        }
+        
+      
         $users_in=DB::table('meeting_users')->where('meeting_id',$meeting_id)->where('user_id',$user_id)->count();
         if($users_in>0)
         {       
@@ -205,6 +222,9 @@ class MeetingController extends Controller
 
 
     public function UpdateDetails(Request $request){ 
+        if (Gate::denies('invitor')) {
+            abort(403,"Sorry, you can not edit a meeting!");
+        }
         $id=Auth::id();
         $org_num=User::where('id',$id)->value('org_id');
         $min=$request->min;
