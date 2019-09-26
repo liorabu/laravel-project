@@ -16,7 +16,7 @@
       <li class="nav-item{{ $activePage == 'dashboard' ? ' active' : '' }}">
         <a class="nav-link" href="{{ route('home') }}">
           <i class="material-icons">date_range</i>
-            <p>{{ __('Calendar') }}</p>
+            <p>{{ __('Dashboard') }}</p>
         </a>
       </li>
      

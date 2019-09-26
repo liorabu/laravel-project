@@ -229,7 +229,7 @@
           <div class="card card-chart">
           @if($meetings)
             <div class="card-body alert-info" >
-              <h4 class="card-title">Tasks Per Meeting</h4>
+              <h4 class="card-title">Meeting Details</h4>
               <p class="card-category">The longest meeting: {{$longest_meeting->title}} </p>
               <p class="card-category">The shortest meeting: {{$shortest_meeting->title}} </p>
               <p class="card-category">The meeting with the most meeting details: {{$max_details_meeting->first()->title}} </p>
