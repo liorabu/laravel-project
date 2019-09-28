@@ -54,15 +54,13 @@ class DetailController extends Controller
         if (Gate::denies('invitor')) {
             abort(403,"You are not allowed to add a detail");
         }
-      
         session()->forget('flash_message');
+        session()->forget('low_message');
         $id = Auth::user()->id;
         $org_id=Auth::user()->org_id;
         $meeting_id=DB::table('meetings')->where('invitor_id', Auth::user()->id)->max('id');
         $users_in=DB::table('meeting_users')->where('meeting_id',$meeting_id)->pluck("user_id");
         $min_details=DB::table('organizations')->where('org_num',$org_id)->value("schedule");
-
-
         if($request->start_time>$request->finish_time){
             Session::flash('flash_message', 'The finish time was earlier than the start time. Please enter the detail again');
             return view('details.create',['org_id'=>$org_id,'min_details'=>$min_details,'meeting_id'=>$meeting_id,'invitor'=>$id,'time'=>$request->start_time]);   
@@ -87,10 +85,6 @@ class DetailController extends Controller
             return view('details.create',['org_id'=>$org_id,'min_details'=>$min_details,'meeting_id'=>$meeting_id,'invitor'=>$id,'time'=>$request->start_time]);  
 
         }
-
-        
-     
-
         return view('details.create',['org_id'=>$org_id,'min_details'=>$min_details,'meeting_id'=>$meeting_id,'invitor'=>$id,'time'=>$request->start_time]);
     }
 
@@ -176,10 +170,7 @@ class DetailController extends Controller
         $last_finish=Detail::where('meeting_id',$detail->meeting_id)->max('finish_time');
         Meeting::where('id', $detail->meeting_id)->update( array('start_time'=>$first_start, 'finish_time'=>$last_finish));
 
-        return redirect()->back();
-       
-
-        
+        return redirect()->back();    
     }
 
     /**

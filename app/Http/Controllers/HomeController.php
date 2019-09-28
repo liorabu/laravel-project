@@ -77,6 +77,10 @@ class HomeController extends Controller
     
                     //the earlier task of this user
                     $earliest_task=Task::where('due_date',$open_tasks->min('due_date'))->get();
+                        if($open_tasks->count()==0){
+                            $open_tasks=NULL;
+                            $earliest_task==NULL;
+                        }
                     }
                     else{
                         $earliest_task=NULL;
@@ -125,7 +129,7 @@ class HomeController extends Controller
                     //All tasks that were not done
                     if($tasks->where('status',0)->count() > 0){
 
-                         $open_tasks=$tasks->where('status',1)->first();
+                         $open_tasks=$tasks->where('status',0)->orderBy('due_date','asc');
 
                          //the earlier task of this invitor
                         $earliest_task=Task::where('due_date',$open_tasks->min('due_date'))->get();
@@ -133,9 +137,14 @@ class HomeController extends Controller
                         $tasks_per_meeting= Task::leftJoin('meetings','tasks.meeting_id','=','meetings.id')
                     ->select( DB::raw('count(tasks.id) tasks , meetings.id') )
                      ->groupBy('meetings.id')->where('tasks.invitor_id', $id)->get('tasks');  
+                     if($open_tasks->count()==0){
+                        $open_tasks=NULL;
+                        $earliest_task==NULL;
+                    }
                     }
                     else{
                         $earliest_task=NULL;
+                        $tasks_per_meeting=NULL;
                     }  
                 }
                 else{
