@@ -40,7 +40,11 @@ Route::get('meetings/connect_between/{user_id}/{meeting_id}', 'MeetingController
 
 Route::get('minDetails', 'MeetingController@minDetails')->name('minDetails');
 
-Route::get('UpdateDetails', 'MeetingController@UpdateDetails')->name('UpdateDetails');
+Route::get('updateDetails', 'MeetingController@updateDetails')->name('updateDetails');
+
+
+
+
 
 Route::get('/re','HomeController@re')->name('re');
 Route::resource('requests', 'JoinController')->middleware('auth');

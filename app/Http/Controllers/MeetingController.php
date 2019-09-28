@@ -214,6 +214,9 @@ class MeetingController extends Controller
         return view('meetings.addUsers',['invitor'=>Auth::user(),'users_in'=>$users_new,'org_id'=>$org_id,'meeting_id'=>$meeting_id,'users'=>$users]);
     }
     public function minDetails(){
+        if (Gate::denies('admin') AND Gate::denies('owner')) {
+            abort(403,"Sorry, you can not update a minimum details!");
+        }
         $id=Auth::id();
         $org_num=User::where('id',$id)->value('org_id');
         $min=Organization::where('org_num',$org_num)->value('schedule');
@@ -221,20 +224,36 @@ class MeetingController extends Controller
     }
 
 
-    public function UpdateDetails(Request $request){ 
-        if (Gate::denies('invitor')) {
-            abort(403,"Sorry, you can not edit a meeting!");
+    public function updateDetails(Request $request){
+        if (Gate::denies('admin') AND Gate::denies('owner')) {
+            abort(403,"Sorry, you can not update a minimum details!");
         }
+
         $id=Auth::id();
         $org_num=User::where('id',$id)->value('org_id');
+        
+        $org=Organization::where('org_num',$org_num)->first();
         $min=$request->min;
-
-
-
+        
+        $org->schedule_update=now();
         DB::table('organizations')
             ->where('org_num', $org_num)
            ->update(['schedule' => $min,'schedule_update'=>now()]);
            return redirect('meetings');
+
+    }
+    public function UpdateMinDetails(Request $request){
+        if (Gate::denies('admin') AND Gate::denies('owner')) {
+            abort(403,"Sorry, you can not update a minimum details!");
+        }
+       
+        $id=Auth::id();
+        $org_num=User::where('id',$id)->value('org_id');
+        $org=Organization::where('org_num',$org_num)->first();
+        $org->schedule=$request->min;
+        $org->schedule_update=now();
+        $org->update();
+        return view('meetings.index');
 
     }
 

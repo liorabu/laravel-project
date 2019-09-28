@@ -100,15 +100,7 @@
             <div>
             <button type="button"  id="toggle1" class="btn btn-primary">I have no organization</button>
             </div>
-            <div class="form-check mr-auto ml-3 mt-3">
-              <label class="form-check-label">
-                <input class="form-check-input" type="checkbox" id="policy" name="policy" {{ old('policy', 1) ? 'checked' : '' }} >
-                <span class="form-check-sign">
-                  <span class="check"></span>
-                </span>
-                {{ _('I agree with the ') }} <a href="#">{{ _('Privacy Policy') }}</a>
-              </label>
-            </div>
+            
           </div>
           <div class="card-footer justify-content-center">
             <button type="submit" class="btn btn-primary btn-link btn-lg">{{ __('Create account') }}</button>
@@ -136,5 +128,6 @@ $(document).ready(function(){
   });
 });
 </script>
+
 
 @endsection
